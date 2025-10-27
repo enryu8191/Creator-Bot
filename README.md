@@ -21,13 +21,19 @@ A Discord bot that manages creator engagement sessions with link submissions and
 
 Required:
 - `DISCORD_TOKEN` - Your Discord bot token
-- `GUILD_ID` - Your Discord server ID
-- `LOG_CHANNEL_ID` - Channel ID for bot logs
-- `REPORT_CHANNEL_ID` - Channel ID for engagement reports
 
 Optional:
 - `ALLOWED_CHANNEL_IDS` - Comma-separated list of allowed posting channels
-- `YAP_CHANNEL_ID` - Legacy single channel support
+
+## Initial Setup
+
+After adding the bot to your server, use these admin commands to configure it:
+
+1. `/set_yap_channel` - Set allowed posting channels
+2. `/set_log` - Set where the bot logs activity  
+3. `/set_report` - Set where engagement reports are sent
+
+The bot will work in any server without hardcoded channel restrictions!
 
 ## Commands
 

@@ -28,9 +28,7 @@ def _get_env_int(name: str) -> int:
 
 try:
     TOKEN = _get_env_str('DISCORD_TOKEN')
-    GUILD_ID = _get_env_int('GUILD_ID')
-    LOG_CHANNEL = _get_env_int('LOG_CHANNEL_ID')
-    REPORT_CHANNEL = _get_env_int('REPORT_CHANNEL_ID')
+    # Removed hardcoded server/channel IDs - now configured per-server via commands
 except RuntimeError as e:
     # Print a clear error and exit early to avoid confusing tracebacks
     print(f"[ERROR] {e}")
@@ -79,8 +77,9 @@ class EngagementBot(commands.Bot):
         self.db = Database()
         # Store allowed channels (None means all channels allowed)
         self.allowed_channel_ids = ALLOWED_CHANNEL_IDS
-        self.log_channel_id = LOG_CHANNEL
-        self.report_channel_id = REPORT_CHANNEL
+        # Default log/report channels to None - configure via /set_log and /set_report commands
+        self.log_channel_id = None
+        self.report_channel_id = None
     async def setup_hook(self):
         """Called when bot is starting up"""
         # Connect to database
@@ -110,11 +109,9 @@ class EngagementBot(commands.Bot):
         await self.load_extension('events.message_handler')
         print("✓ Extensions loaded")
 
-        # Sync slash commands to guild
-        guild = discord.Object(id=GUILD_ID)
-        self.tree.copy_global_to(guild=guild)
-        await self.tree.sync(guild=guild)
-        print(f"✓ Commands synced to guild {GUILD_ID}")
+        # Sync slash commands globally (works across all servers)
+        await self.tree.sync()
+        print("✓ Commands synced globally")
 
     async def on_ready(self):
         """Called when bot successfully connects to Discord"""
